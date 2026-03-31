@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nautical Dusk — Projects Carousel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── TOKENS ── */
+:root {
+  --night-water:   #1A2B45;
+  --open-ocean:    #2E4A72;
+  --horizon-glow:  #E8713A;
+  --dusk-bloom:    #E8A0A8;
+  --storm-slate:   #4A5568;
+  --sea-foam:      #F7F5F2;
+  --salt:          #FFFFFF;
+
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans:  'Inter', system-ui, sans-serif;
+}
+
+/* ── PAGE SHELL ── */
+body {
+  background: #131E2E;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  font-family: var(--font-sans);
+}
+
+/* ── SECTION WRAPPER ── */
+.carousel-section {
+  width: 100%;
+  max-width: 1280px;
+  background: var(--night-water);
+  padding: 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── FILM GRAIN ── */
+.carousel-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='0.09'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+}
+
+/* ── COLOR BANDING (atmospheric) ── */
+.carousel-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(46, 74, 114, 0.08) 0px,   rgba(46, 74, 114, 0.08) 60px,
+    rgba(26, 43, 69, 0.0)  60px,   rgba(26, 43, 69, 0.0)  120px,
+    rgba(74, 85, 104, 0.05) 120px, rgba(74, 85, 104, 0.05) 180px,
+    rgba(26, 43, 69, 0.0)  180px,  rgba(26, 43, 69, 0.0)  240px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.section-inner { position: relative; z-index: 1; }
+
+/* ── SECTION HEADER ── */
+.section-header { margin-bottom: 56px; }
+
+.section-label {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dusk-bloom);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-label::before {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 1px;
+  background: var(--dusk-bloom);
+  flex-shrink: 0;
+}
+
+.section-heading {
+  font-family: var(--font-serif);
+  font-size: 44px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: var(--salt);
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+.horizon-rule {
+  width: 64px;
+  height: 2px;
+  background: var(--horizon-glow);
+  margin-top: 20px;
+}
+
+/* ── CAROUSEL TRACK ── */
+.carousel-viewport {
+  overflow: hidden;
+  position: relative;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 24px;
+  transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+/* ── PROJECT CARD ── */
+.project-card {
+  background: var(--open-ocean);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-left: 3px solid var(--horizon-glow);
+  flex: 0 0 calc(33.333% - 16px);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  position: relative;
+  transition: border-left-color 0.2s ease, background 0.2s ease;
+  text-decoration: none;
+}
+
+.project-card:hover {
+  background: #355480;
+  border-left-color: var(--dusk-bloom);
+}
+
+/* Thumbnail */
+.card-thumb {
+  width: 100%;
+  aspect-ratio: 16/9;
+  position: relative;
+  overflow: hidden;
+  background: var(--night-water);
+  flex-shrink: 0;
+}
+
+.thumb-bg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ocean banding for thumbnails */
+.thumb-ocean {
+  background: repeating-linear-gradient(
+    180deg,
+    #0F1824 0px, #0F1824 12px,
+    #162032 12px, #162032 28px,
+    #1C2840 28px, #1C2840 44px,
+    #213050 44px, #213050 60px,
+    #2A3A5A 60px, #2A3A5A 76px,
+    #1A2030 76px, #1A2030 100%
+  );
+}
+.thumb-rag {
+  background: repeating-linear-gradient(
+    180deg,
+    #1A1000 0px, #1A1000 10px,
+    #241800 10px, #241800 26px,
+    #0A0A14 26px, #0A0A14 42px,
+    #181020 42px, #181020 58px,
+    #2A1808 58px, #2A1808 74px,
+    #100810 74px, #100810 100%
+  );
+}
+.thumb-rag-light {
+  background: repeating-linear-gradient(
+    180deg,
+    #0E1E30 0px, #0E1E30 14px,
+    #142840 14px, #142840 30px,
+    #3A2010 30px, #3A2010 46px,
+    #1A1010 46px, #1A1010 62px,
+    #0C1826 62px, #0C1826 78px,
+    #2A3040 78px, #2A3040 100%
+  );
+}
+.thumb-slate {
+  background: repeating-linear-gradient(
+    180deg,
+    #1C2232 0px, #1C2232 10px,
+    #242C3C 10px, #242C3C 24px,
+    #1A1C28 24px, #1A1C28 38px,
+    #2A3040 38px, #2A3040 52px,
+    #1E2838 52px, #1E2838 66px,
+    #161E2C 66px, #161E2C 100%
+  );
+}
+.thumb-dusk {
+  background: repeating-linear-gradient(
+    180deg,
+    #0C1420 0px, #0C1420 8px,
+    #141C2C 8px, #141C2C 20px,
+    #2A1808 20px, #2A1808 32px,
+    #3A2010 32px, #3A2010 44px,
+    #180C0C 44px, #180C0C 56px,
+    #0A0A18 56px, #0A0A18 100%
+  );
+}
+
+/* Albatross silhouette in thumbnails */
+.thumb-bird {
+  position: absolute;
+  opacity: 0.55;
+  transition: opacity 0.3s;
+}
+.project-card:hover .thumb-bird { opacity: 0.75; }
+
+/* grain on thumb */
+.thumb-grain {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.13'/%3E%3C/svg%3E");
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* tag overlay on thumb */
+.card-tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--salt);
+  background: rgba(232,113,58,0.85);
+  padding: 3px 8px;
+  z-index: 2;
+}
+
+/* Card body */
+.card-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.card-title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  color: var(--salt);
+  line-height: 1.2;
+  transition: color 0.2s;
+}
+.project-card:hover .card-title { color: #F0EDE8; }
+
+.card-caption {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.65;
+  color: rgba(200, 210, 225, 0.75);
+  flex: 1;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  margin-top: auto;
+}
+
+.card-link-label {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--horizon-glow);
+  transition: color 0.2s;
+}
+.project-card:hover .card-link-label { color: var(--dusk-bloom); }
+
+.card-arrow {
+  font-size: 14px;
+  color: var(--horizon-glow);
+  transition: transform 0.2s, color 0.2s;
+  margin-left: auto;
+}
+.project-card:hover .card-arrow {
+  transform: translateX(4px);
+  color: var(--dusk-bloom);
+}
+
+/* ── CONTROLS ── */
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+
+/* Dot indicators */
+.dot-track {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.25);
+  cursor: pointer;
+  transition: background 0.25s, transform 0.25s, width 0.25s;
+}
+
+.dot.active {
+  background: var(--horizon-glow);
+  border-color: var(--horizon-glow);
+  width: 20px;
+  border-radius: 3px;
+}
+
+/* Prev/Next ghost buttons */
+.nav-btns { display: flex; gap: 12px; }
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.7);
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.nav-btn:hover {
+  border-color: var(--horizon-glow);
+  color: var(--horizon-glow);
+}
+
+.nav-btn:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+.nav-btn:disabled:hover {
+  border-color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.7);
+}
+
+.nav-btn svg { flex-shrink: 0; }
+
+/* counter */
+.slide-counter {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.35);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.slide-counter .current { color: var(--salt); }
+.slide-counter .sep { color: rgba(255,255,255,0.2); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .carousel-section { padding: 48px 24px; }
+  .section-heading { font-size: 32px; }
+  .project-card { flex: 0 0 calc(50% - 12px); }
+}
+
+@media (max-width: 600px) {
+  .project-card { flex: 0 0 calc(100%); }
+  .section-heading { font-size: 28px; }
+  .nav-btns .btn-label { display: none; }
+}
+</style>
+</head>
+<body>
+
+<section class="carousel-section">
+  <!-- atmospheric layers via ::before / ::after (CSS only) -->
+
+  <div class="section-inner">
+
+    <!-- Header -->
+    <div class="section-header">
+      <div class="section-label">Selected Work</div>
+      <h2 class="section-heading">Projects</h2>
+      <div class="horizon-rule"></div>
+    </div>
+
+    <!-- Carousel -->
+    <div class="carousel-viewport" id="viewport">
+      <div class="carousel-track" id="track">
+
+        <!-- Card 1 -->
+        <a class="project-card" href="#" tabindex="0">
+          <div class="card-thumb thumb-ocean">
+            <div class="thumb-bg"></div>
+            <svg class="thumb-bird" style="bottom:18px;right:24px;" width="110" height="50" viewBox="0 0 220 100" fill="none">
+              <path d="M110 50 L0 20 L20 50 L0 65 L40 58 L110 75 L180 58 L220 65 L200 50 L220 20 Z" fill="#E8E4DF"/>
+            </svg>
+            <div class="thumb-grain"></div>
+            <div class="card-tag">RAG · Python</div>
+          </div>
+          <div class="card-body">
+            <div class="card-title">Semantic Search Engine</div>
+            <p class="card-caption">A retrieval-augmented generation system built with Claude's API that surfaces contextually relevant documents from a private corpus, cutting manual lookup time by 70%.</p>
+            <div class="card-footer">
+              <span class="card-link-label">View Project</span>
+              <span class="card-arrow">→</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Card 2 -->
+        <a class="project-card" href="#" tabindex="0">
+          <div class="card-thumb thumb-rag">
+            <div class="thumb-bg"></div>
+            <svg class="thumb-bird" style="top:20px;left:50%;transform:translateX(-50%);" width="90" height="40" viewBox="0 0 220 100" fill="none">
+              <path d="M110 50 L0 20 L20 50 L0 65 L40 58 L110 75 L180 58 L220 65 L200 50 L220 20 Z" fill="#D8D0C8" opacity="0.9"/>
+            </svg>
+            <div class="thumb-grain"></div>
+            <div class="card-tag">React · Node</div>
+          </div>
+          <div class="card-body">
+            <div class="card-title">Real-Time Data Dashboard</div>
+            <p class="card-caption">A live analytics interface that streams sensor telemetry via WebSockets and renders interactive charts with sub-100ms update latency across concurrent users.</p>
+            <div class="card-footer">
+              <span class="card-link-label">View Project</span>
+              <span class="card-arrow">→</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Card 3 -->
+        <a class="project-card" href="#" tabindex="0">
+          <div class="card-thumb thumb-rag-light">
+            <div class="thumb-bg"></div>
+            <svg class="thumb-bird" style="bottom:14px;right:16px;" width="100" height="44" viewBox="0 0 220 100" fill="none">
+              <path d="M110 50 L0 20 L20 50 L0 65 L40 58 L110 75 L180 58 L220 65 L200 50 L220 20 Z" fill="#C8C4C0" opacity="0.7"/>
+            </svg>
+            <div class="thumb-grain"></div>
+            <div class="card-tag">PostgreSQL · API</div>
+          </div>
+          <div class="card-body">
+            <div class="card-title">Inventory Management API</div>
+            <p class="card-caption">A RESTful service with role-based access control that manages multi-warehouse stock levels, generating automated reorder alerts when thresholds are breached.</p>
+            <div class="card-footer">
+              <span class="card-link-label">View Project</span>
+              <span class="card-arrow">→</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Card 4 -->
+        <a class="project-card" href="#" tabindex="0">
+          <div class="card-thumb thumb-slate">
+            <div class="thumb-bg"></div>
+            <svg class="thumb-bird" style="bottom:20px;left:24px;" width="95" height="42" viewBox="0 0 220 100" fill="none">
+              <path d="M110 50 L0 20 L20 50 L0 65 L40 58 L110 75 L180 58 L220 65 L200 50 L220 20 Z" fill="#E0DCDA" opacity="0.65"/>
+            </svg>
+            <div class="thumb-grain"></div>
+            <div class="card-tag">ML · Flask</div>
+          </div>
+          <div class="card-body">
+            <div class="card-title">AI Output Evaluator</div>
+            <p class="card-caption">A labeling and scoring tool that streamlines human evaluation of LLM outputs, supporting configurable rubrics and batch export for downstream model fine-tuning.</p>
+            <div class="card-footer">
+              <span class="card-link-label">View Project</span>
+              <span class="card-arrow">→</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Card 5 -->
+        <a class="project-card" href="#" tabindex="0">
+          <div class="card-thumb thumb-dusk">
+            <div class="thumb-bg"></div>
+            <svg class="thumb-bird" style="top:16px;right:20px;" width="105" height="46" viewBox="0 0 220 100" fill="none">
+              <path d="M110 50 L0 20 L20 50 L0 65 L40 58 L110 75 L180 58 L220 65 L200 50 L220 20 Z" fill="#DCD8D4" opacity="0.6"/>
+            </svg>
+            <div class="thumb-grain"></div>
+            <div class="card-tag">Vue · Express</div>
+          </div>
+          <div class="card-body">
+            <div class="card-title">Portfolio CMS</div>
+            <p class="card-caption">A headless content management system with a custom admin panel that lets non-technical clients publish case studies and update project metadata without touching code.</p>
+            <div class="card-footer">
+              <span class="card-link-label">View Project</span>
+              <span class="card-arrow">→</span>
+            </div>
+          </div>
+        </a>
+
+      </div><!-- /track -->
+    </div><!-- /viewport -->
+
+    <!-- Controls -->
+    <div class="carousel-controls">
+
+      <div class="dot-track" id="dots"></div>
+
+      <div class="slide-counter">
+        <span class="current" id="counter-current">01</span>
+        <span class="sep">/</span>
+        <span id="counter-total">03</span>
+      </div>
+
+      <div class="nav-btns">
+        <button class="nav-btn" id="btn-prev" aria-label="Previous">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/>
+          </svg>
+          <span class="btn-label">Prev</span>
+        </button>
+        <button class="nav-btn" id="btn-next" aria-label="Next">
+          <span class="btn-label">Next</span>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M5 2L10 7L5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+
+  </div><!-- /section-inner -->
+</section>
+
+<script>
+(function() {
+  const track     = document.getElementById('track');
+  const viewport  = document.getElementById('viewport');
+  const btnPrev   = document.getElementById('btn-prev');
+  const btnNext   = document.getElementById('btn-next');
+  const dotsEl    = document.getElementById('dots');
+  const ccurrent  = document.getElementById('counter-current');
+  const ctotal    = document.getElementById('counter-total');
+
+  const cards     = Array.from(track.querySelectorAll('.project-card'));
+  let currentPage = 0;
+
+  /* Determine how many cards visible based on viewport width */
+  function visibleCount() {
+    const w = viewport.offsetWidth;
+    if (w < 600) return 1;
+    if (w < 900) return 2;
+    return 3;
+  }
+
+  function totalPages() {
+    return Math.ceil(cards.length / visibleCount());
+  }
+
+  /* Build dots */
+  function buildDots() {
+    dotsEl.innerHTML = '';
+    const n = totalPages();
+    ctotal.textContent = String(n).padStart(2, '0');
+    for (let i = 0; i < n; i++) {
+      const d = document.createElement('button');
+      d.className = 'dot' + (i === currentPage ? ' active' : '');
+      d.setAttribute('aria-label', `Go to slide ${i + 1}`);
+      d.addEventListener('click', () => goTo(i));
+      dotsEl.appendChild(d);
+    }
+  }
+
+  function updateDots() {
+    const dots = dotsEl.querySelectorAll('.dot');
+    dots.forEach((d, i) => d.classList.toggle('active', i === currentPage));
+  }
+
+  function goTo(page) {
+    const n     = visibleCount();
+    const pages = totalPages();
+    currentPage = Math.max(0, Math.min(page, pages - 1));
+
+    /* Card width + gap */
+    const cardW = cards[0].offsetWidth;
+    const gap   = 24;
+    const offset = currentPage * n * (cardW + gap);
+
+    track.style.transform = `translateX(-${offset}px)`;
+
+    ccurrent.textContent = String(currentPage + 1).padStart(2, '0');
+    updateDots();
+
+    btnPrev.disabled = currentPage === 0;
+    btnNext.disabled = currentPage >= pages - 1;
+  }
+
+  btnPrev.addEventListener('click', () => goTo(currentPage - 1));
+  btnNext.addEventListener('click', () => goTo(currentPage + 1));
+
+  /* Keyboard */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft')  goTo(currentPage - 1);
+    if (e.key === 'ArrowRight') goTo(currentPage + 1);
+  });
+
+  /* Touch swipe */
+  let touchX = null;
+  viewport.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+  viewport.addEventListener('touchend', e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 40) goTo(currentPage + (dx < 0 ? 1 : -1));
+    touchX = null;
+  }, { passive: true });
+
+  /* Re-init on resize */
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      track.style.transition = 'none';
+      buildDots();
+      goTo(0);
+      requestAnimationFrame(() => { track.style.transition = ''; });
+    }, 120);
+  });
+
+  /* Init */
+  buildDots();
+  goTo(0);
+})();
+</script>
+
+</body>
+</html>

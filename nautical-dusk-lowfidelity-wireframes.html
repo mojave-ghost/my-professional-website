@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nautical Dusk — Low-Fidelity Wireframes</title>
+<style>
+  /* ─────────────── BASE ─────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --wf-bg:        #F0EFED;
+    --wf-surface:   #E2E0DC;
+    --wf-stroke:    #9B9790;
+    --wf-dark:      #3A3835;
+    --wf-mid:       #6E6B66;
+    --wf-accent:    #C0BDB9;
+    --wf-highlight: #4A86B8;   /* annotation blue */
+    --wf-label-bg:  #DDEAF7;
+    --wf-red:       #C0493A;
+
+    --font-ui:   'Courier New', Courier, monospace;
+    --r:         2px;
+  }
+
+  body {
+    background: #D6D4D0;
+    font-family: var(--font-ui);
+    color: var(--wf-dark);
+    padding: 40px 24px 80px;
+  }
+
+  /* ─────────────── FRAME WRAPPER ─────────────── */
+  .wf-page {
+    width: 1280px;
+    max-width: 100%;
+    margin: 0 auto 80px;
+  }
+
+  .wf-frame-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--wf-highlight);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .wf-frame-label span {
+    background: var(--wf-label-bg);
+    border: 1px solid var(--wf-highlight);
+    padding: 2px 8px;
+    border-radius: 2px;
+  }
+  .wf-frame-label .note {
+    color: var(--wf-mid);
+    font-weight: 400;
+    background: none;
+    border: none;
+    font-style: italic;
+  }
+
+  .wf-frame {
+    background: var(--wf-bg);
+    border: 1.5px solid var(--wf-stroke);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ─────────────── ANNOTATION SYSTEM ─────────────── */
+  .ann {
+    position: absolute;
+    font-size: 10px;
+    font-family: var(--font-ui);
+    color: var(--wf-highlight);
+    background: var(--wf-label-bg);
+    border: 1px solid var(--wf-highlight);
+    padding: 2px 6px;
+    border-radius: 2px;
+    white-space: nowrap;
+    z-index: 20;
+    pointer-events: none;
+  }
+  .ann::before {
+    content: '▸ ';
+  }
+  .ann-right::before { content: '◂ '; }
+  .ann-below::before { content: '' }
+
+  /* Leader line */
+  .ann-line {
+    position: absolute;
+    border-top: 1px dashed var(--wf-highlight);
+    z-index: 19;
+    pointer-events: none;
+  }
+
+  /* ─────────────── REUSABLE PLACEHOLDERS ─────────────── */
+  .box {
+    background: var(--wf-surface);
+    border: 1px solid var(--wf-stroke);
+    border-radius: var(--r);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: var(--wf-mid);
+    text-align: center;
+    line-height: 1.4;
+  }
+  .box.dark { background: #3A3835; border-color: #555; color: #AAA; }
+  .box.darker { background: #252320; border-color: #444; color: #888; }
+  .box.accent { background: #C0BDB9; border-color: var(--wf-stroke); }
+
+  /* text placeholder lines */
+  .line { height: 10px; background: var(--wf-stroke); border-radius: 2px; }
+  .line.sm { height: 8px; opacity: 0.6; }
+  .line.lg { height: 16px; }
+  .line.xl { height: 28px; }
+  .line.xxl { height: 48px; }
+  .line.dark { background: #666; }
+  .line.light { background: var(--wf-accent); }
+
+  .img-placeholder {
+    background: var(--wf-accent);
+    border: 1px dashed var(--wf-stroke);
+    border-radius: var(--r);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: var(--wf-mid);
+    position: relative;
+  }
+  .img-placeholder::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 1px dashed #BBB;
+    border-radius: 1px;
+  }
+  .img-placeholder.ocean {
+    background: repeating-linear-gradient(
+      180deg,
+      #B8BFC8 0px, #B8BFC8 8px,
+      #C5CAD1 8px, #C5CAD1 16px,
+      #ADB4BE 16px, #ADB4BE 24px,
+      #BFC5CC 24px, #BFC5CC 32px
+    );
+  }
+
+  .rule { height: 2px; background: var(--wf-stroke); border-radius: 1px; }
+  .rule.accent-rule { background: #B07040; }
+
+  /* ─────────────── NAV ─────────────── */
+  .nav-bar {
+    height: 64px;
+    background: #2C2A28;
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
+    gap: 0;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .nav-logo { width: 160px; }
+  .nav-links { display: flex; gap: 32px; margin-left: auto; align-items: center; }
+  .nav-link-item { display: flex; flex-direction: column; gap: 4px; align-items: center; }
+  .nav-link-bar { height: 8px; width: 60px; background: #666; border-radius: 1px; }
+  .nav-link-active-rule { height: 2px; width: 60px; background: #B07040; border-radius: 1px; }
+
+  /* ─────────────── HERO ─────────────── */
+  .hero {
+    height: 640px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      180deg,
+      #1A1D22 0px, #1A1D22 80px,
+      #1E2330 80px, #1E2330 200px,
+      #252C3A 200px, #252C3A 320px,
+      #2A3040 320px, #2A3040 430px,
+      #3A3020 430px, #3A3020 470px,
+      #2E2218 470px, #2E2218 510px,
+      #252010 510px, #252010 560px,
+      #1A1A18 560px, #1A1A18 640px
+    );
+  }
+  .grain-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.12'/%3E%3C/svg%3E");
+    opacity: 0.35;
+    pointer-events: none;
+  }
+  .bird-silhouette {
+    position: absolute;
+    right: 280px;
+    top: 50%;
+    transform: translateY(-55%);
+    width: 240px;
+    height: 120px;
+    background: #E8E4DF;
+    clip-path: polygon(
+      50% 50%, 0% 30%, 10% 50%, 0% 60%, 20% 55%, 50% 70%,
+      80% 55%, 100% 60%, 90% 50%, 100% 30%
+    );
+    opacity: 0.85;
+  }
+  .hero-content {
+    position: absolute;
+    left: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 520px;
+  }
+
+  /* ─────────────── SECTIONS ─────────────── */
+  .section { padding: 80px 80px; position: relative; }
+  .section.dark { background: #2C2A28; }
+  .section.light { background: var(--wf-bg); }
+  .section.mid { background: #3A3835; }
+
+  .section-label-tag {
+    height: 10px;
+    width: 120px;
+    background: var(--wf-accent);
+    border-radius: 1px;
+    margin-bottom: 12px;
+  }
+  .section-label-tag.pink { background: #C0A8A8; }
+
+  /* 12-col grid overlay */
+  .grid-overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 0 24px;
+    padding: 0 80px;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .grid-overlay.visible { opacity: 1; }
+  .grid-col { background: rgba(74, 134, 184, 0.06); border-left: 1px solid rgba(74,134,184,0.15); }
+
+  /* ─────────────── CARDS ─────────────── */
+  .card {
+    background: #353230;
+    border: 1px solid #555;
+    border-left: 3px solid #B07040;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .card.light-card {
+    background: #FFF;
+    border: 1px solid #CCC;
+    border-left: 3px solid #B07040;
+  }
+
+  /* ─────────────── PULL QUOTE ─────────────── */
+  .pull-quote-mark {
+    font-size: 72px;
+    line-height: 0.8;
+    color: #C0A8A8;
+    font-family: Georgia, serif;
+    margin-bottom: 8px;
+  }
+
+  /* ─────────────── SCROLLNAV ─────────────── */
+  .page-scrollnav {
+    position: fixed;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 100;
+  }
+  .snav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--wf-stroke);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .snav-dot:hover, .snav-dot.active { background: var(--wf-highlight); transform: scale(1.5); }
+  .snav-label {
+    position: absolute;
+    right: 18px;
+    background: var(--wf-label-bg);
+    border: 1px solid var(--wf-highlight);
+    color: var(--wf-highlight);
+    font-size: 9px;
+    padding: 2px 6px;
+    white-space: nowrap;
+    border-radius: 2px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+    font-family: var(--font-ui);
+    transform: translateY(-50%);
+    top: 50%;
+  }
+  .snav-item { position: relative; display: flex; align-items: center; }
+  .snav-item:hover .snav-label { opacity: 1; }
+
+  /* ─────────────── GRID TOGGLE ─────────────── */
+  #grid-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--wf-label-bg);
+    border: 1.5px solid var(--wf-highlight);
+    color: var(--wf-highlight);
+    font-family: var(--font-ui);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 2px;
+    z-index: 200;
+    text-transform: uppercase;
+  }
+  #grid-toggle:hover { background: var(--wf-highlight); color: white; }
+
+  /* ─────────────── MASTER PAGE TITLE ─────────────── */
+  .master-title {
+    text-align: center;
+    margin-bottom: 48px;
+    padding: 32px;
+    background: #FFF;
+    border: 1.5px solid var(--wf-stroke);
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 48px;
+  }
+  .master-title h1 {
+    font-family: Georgia, serif;
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    color: var(--wf-dark);
+    margin-bottom: 8px;
+  }
+  .master-title p {
+    font-size: 11px;
+    color: var(--wf-mid);
+    letter-spacing: 0.04em;
+  }
+  .master-title .chips {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    font-size: 9px;
+    background: var(--wf-label-bg);
+    border: 1px solid var(--wf-highlight);
+    color: var(--wf-highlight);
+    padding: 3px 8px;
+    border-radius: 2px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* spacing ruler */
+  .ruler {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 9px;
+    color: var(--wf-highlight);
+    font-family: var(--font-ui);
+  }
+  .ruler-line { flex: 1; border-top: 1px dashed var(--wf-highlight); }
+
+  /* section IDs for scrolling */
+  section.wf-section { scroll-margin-top: 40px; }
+
+  /* Divider */
+  .wf-divider {
+    max-width: 1280px;
+    margin: 0 auto 16px;
+    font-size: 10px;
+    color: var(--wf-mid);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .wf-divider::before, .wf-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--wf-stroke);
+  }
+
+  /* ghost btn */
+  .ghost-btn {
+    display: inline-block;
+    border: 1.5px solid #AAA;
+    padding: 10px 28px;
+    font-size: 10px;
+    color: #AAA;
+    letter-spacing: 0.08em;
+    font-family: var(--font-ui);
+    text-transform: uppercase;
+  }
+  .ghost-btn.orange { border-color: #B07040; color: #B07040; }
+
+  /* footer */
+  .footer-col { display: flex; flex-direction: column; gap: 10px; }
+</style>
+</head>
+<body>
+
+<!-- ───── MASTER TITLE ───── -->
+<div class="master-title">
+  <h1>Nautical Dusk — Low-Fidelity Wireframes</h1>
+  <p>v1.0 · February 2026 · 1280px reference viewport · 12-col / 24px gutter grid</p>
+  <div class="chips">
+    <span class="chip">Navigation</span>
+    <span class="chip">Hero</span>
+    <span class="chip">About / Dark Section</span>
+    <span class="chip">Cards Grid</span>
+    <span class="chip">Pull Quote</span>
+    <span class="chip">Light Content</span>
+    <span class="chip">Footer</span>
+    <span class="chip">Mobile</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     FRAME 1 — NAVIGATION
+═══════════════════════════════════════════════════════ -->
+<section class="wf-section" id="frame-nav">
+<div class="wf-divider">Frame 1 — Navigation Bar</div>
+<div class="wf-page">
+  <div class="wf-frame-label">
+    <span>NAV-01</span>
+    <span class="note">Night Water bg · Cormorant logo · Inter 500 all-caps links · Active = Horizon Glow underline rule</span>
+  </div>
+  <div class="wf-frame" style="position:relative;">
+
+    <!-- Default state -->
+    <div style="padding: 12px 40px 12px; background: #1C1C1C; font-size:10px; color:#666; letter-spacing:0.06em;">DEFAULT — on load</div>
+    <div class="nav-bar" style="background:#1C2232;">
+      <div class="nav-logo">
+        <div class="line dark" style="width:140px; height:14px;"></div>
+        <div style="font-size:9px; color:#666; margin-top:3px; letter-spacing:0.06em;">CORMORANT GARAMOND</div>
+      </div>
+      <div class="nav-links">
+        <div class="nav-link-item">
+          <div class="nav-link-bar"></div>
+          <div style="font-size:8px;color:#555">WORK</div>
+        </div>
+        <div class="nav-link-item">
+          <div class="nav-link-bar" style="background:#444"></div>
+          <div class="nav-link-active-rule"></div>
+          <div style="font-size:8px;color:#B07040">ABOUT ← active</div>
+        </div>
+        <div class="nav-link-item">
+          <div class="nav-link-bar"></div>
+          <div style="font-size:8px;color:#555">SERVICES</div>
+        </div>
+        <div class="nav-link-item">
+          <div class="nav-link-bar"></div>
+          <div style="font-size:8px;color:#555">CONTACT</div>
+        </div>
+        <div class="ghost-btn orange" style="margin-left:16px;">CTA</div>
+      </div>
+    </div>
+
+    <!-- Scrolled state -->
+    <div style="padding: 8px 40px 8px; background: #161616; font-size:10px; color:#666; letter-spacing:0.06em; border-top: 1px solid #333;">ON SCROLL — dark overlay + Horizon Glow bottom border</div>
+    <div class="nav-bar" style="background:#0F1520; border-bottom: 2px solid #B07040;">
+      <div class="nav-logo"><div class="line dark" style="width:140px; height:14px;"></div></div>
+      <div class="nav-links">
+        <div class="nav-link-item"><div class="nav-link-bar"></div></div>
+        <div class="nav-link-item"><div class="nav-link-bar" style="background:#555"></div><div class="nav-link-active-rule"></div></div>
+        <div class="nav-link-item"><div class="nav-link-bar"></div></div>
+        <div class="nav-link-item"><div class="nav-link-bar"></div></div>
+        <div class="ghost-btn orange" style="margin-left:16px;">CTA</div>
+      </div>
+    </div>
+
+    <!-- annotations -->
+    <div class="ann" style="top: 22px; left: 8px;">Logo: Cormorant Garamond · serif</div>
+    <div class="ann" style="top: 22px; right: 380px;">Inter 500 · ALL CAPS · 0.08em spacing</div>
+    <div class="ann" style="top: 52px; right: 260px; background:#FFF7E6; border-color:#B07040; color:#B07040;">2px Horizon Glow rule — active state only</div>
+    <div class="ann" style="bottom: 8px; left: 200px; background:#FFF7E6; border-color:#B07040; color:#B07040;">Scrolled: Horizon Glow 2px border-bottom · no blur</div>
+    <div class="ann" style="bottom: 8px; right: 8px;">Ghost btn: white/orange border · no fill · no radius</div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     FRAME 2 — HERO SECTION
+═══════════════════════════════════════════════════════ -->
+<section class="wf-section" id="frame-hero">
+<div class="wf-divider">Frame 2 — Hero Section</div>
+<div class="wf-page">
+  <div class="wf-frame-label">
+    <span>HERO-01</span>
+    <span class="note">100vh · Night Water base · 4–6 banded layers · bird silhouette · film grain · no filled buttons</span>
+  </div>
+  <div class="wf-frame" style="position:relative; height:640px; overflow:hidden;">
+
+    <!-- BG layers -->
+    <div class="hero-bg"></div>
+    <div class="grain-overlay"></div>
+
+    <!-- Nav inside hero -->
+    <div class="nav-bar" style="position:absolute; top:0; left:0; right:0; z-index:10; background:rgba(20,25,35,0.6);">
+      <div class="nav-logo"><div class="line dark" style="width:140px; height:12px;"></div></div>
+      <div class="nav-links">
+        <div class="nav-link-item"><div class="nav-link-bar" style="width:48px;"></div></div>
+        <div class="nav-link-item"><div class="nav-link-bar" style="width:48px;"></div></div>
+        <div class="nav-link-item"><div class="nav-link-bar" style="width:56px;"></div></div>
+        <div class="nav-link-item"><div class="nav-link-bar" style="width:56px;"></div></div>
+        <div class="ghost-btn" style="margin-left:16px; border-color:#AAA; color:#AAA;">GET IN TOUCH</div>
+      </div>
+    </div>
+
+    <!-- Bird -->
+    <div style="position:absolute; right:200px; top:50%; transform:translateY(-52%); text-align:center; z-index:8;">
+      <svg width="220" height="100" viewBox="0 0 220 100" fill="none">
+        <path d="M110 50 L0 20 L20 50 L0 65 L40 58 L110 75 L180 58 L220 65 L200 50 L220 20 Z" fill="#E8E4DF" opacity="0.8"/>
+      </svg>
+      <div style="font-size:9px; color:#666; margin-top:4px; letter-spacing:0.06em; background:rgba(0,0,0,0.5); padding:2px 6px;">ALBATROSS — flat silhouette · Salt white · no shadow</div>
+    </div>
+
+    <!-- Content -->
+    <div class="hero-content" style="z-index:10; position:absolute; left:80px; top:50%; transform:translateY(-50%);">
+      <div style="height:10px; width:100px; background:#777; border-radius:1px; margin-bottom:16px;"></div>
+      <div style="height:52px; width:460px; background:#4A5568; border-radius:1px; margin-bottom:8px; opacity:0.7;"></div>
+      <div style="height:36px; width:380px; background:#4A5568; border-radius:1px; margin-bottom:4px; opacity:0.5;"></div>
+      <div class="rule accent-rule" style="width:320px; margin: 16px 0;"></div>
+      <div style="height:14px; width:400px; background:#555; border-radius:1px; margin-bottom:6px;"></div>
+      <div style="height:14px; width:340px; background:#555; border-radius:1px; margin-bottom:6px;"></div>
+      <div style="height:14px; width:360px; background:#555; border-radius:1px; margin-bottom:28px;"></div>
+      <div style="display:flex; gap:16px;">
+        <div class="ghost-btn" style="border-color:#DDD; color:#DDD;">PRIMARY CTA</div>
+        <div class="ghost-btn" style="border-color:#888; color:#888;">SECONDARY</div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div style="position:absolute; bottom:24px; left:50%; transform:translateX(-50%); text-align:center;">
+      <div style="width:1px; height:32px; background:#555; margin:0 auto 4px;"></div>
+      <div style="font-size:9px; color:#555; letter-spacing:0.1em;">SCROLL</div>
+    </div>
+
+    <!-- Annotations -->
+    <div class="ann" style="top:8px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.7); border-color:#555; color:#AAA;">4–6 horizontal color bands · navy base</div>
+    <div class="ann" style="top:76px; left:8px;">H1: Cormorant Garamond 300 · 52–72px fluid · +0.02em spacing</div>
+    <div class="ann" style="top:130px; left:8px; background:#FFF7E6; border-color:#B07040; color:#B07040;">Thin Horizon Glow rule below subtitle</div>
+    <div class="ann" style="bottom:80px; left:8px;">Ghost btns only · white/orange border · transparent fill</div>
+    <div class="ann" style="top:50%; right:8px; transform:translateY(-50%);">Bird: right-weighted · centered vertically · Sea Foam / Salt</div>
+    <div class="ann" style="top:8px; right:8px; background:rgba(0,0,0,0.7); border-color:#555; color:#AAA;">Film grain: CSS SVG feTurbulence · sits above all layers</div>
+  </div>
+  <!-- Band detail callout -->
+  <div style="margin-top:8px; display:flex; gap:8px; font-size:9px; color:var(--wf-mid); letter-spacing:0.06em; align-items:center;">
+    <span>LAYER ORDER (bottom→top):</span>
+    <span style="background:#1A2030; color:#888; padding:2px 8px; border:1px solid #444;">1 Night Water base</span>
+    <span style="background:#222C3C; color:#888; padding:2px 8px; border:1px solid #444;">2–5 Blue bands</span>
+    <span style="background:#4A3020; color:#888; padding:2px 8px; border:1px solid #665544;">6 Orange sun</span>
+    <span style="background:#3A2828; color:#888; padding:2px 8px; border:1px solid #665555;">7 Pink clouds</span>
+    <span style="background:#333; color:#888; padding:2px 8px; border:1px solid #555;">8 Film grain overlay</span>
+    <span style="background:#DDD; color:#555; padding:2px 8px; border:1px solid #BBB;">9 Bird silhouette</span>
+    <span style="background:#EEE; color:#555; padding:2px 8px; border:1px solid #CCC;">10 Text / UI</span>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     FRAME 3 — DARK CONTENT SECTION (About / Services)
+═══════════════════════════════════════════════════════ -->
+<section class="wf-section" id="frame-dark">
+<div class="wf-divider">Frame 3 — Dark Content Section</div>
+<div class="wf-page">
+  <div class="wf-frame-label">
+    <span>SECTION-DARK-01</span>
+    <span class="note">Night Water bg · textured · 7-col left / 5-col right · serif heading · body max 680px</span>
+  </div>
+  <div class="wf-frame" style="position:relative;">
+    <div class="section dark" id="s-dark">
+      <div class="grid-overlay" id="grid-dark"><div class="grid-col"></div><div class="grid-col"></div><div class="grid-col"></div><div class="grid-col"></div><div class="grid-col"></div><div class="grid-col"></div><div class="grid-col"></div><div class="grid-col"></div><div class="grid-col"></div><div class="grid-col"></div><div class="grid-col"></div><div class="grid-col"></div></div>
+
+      <div style="display:grid; grid-template-columns: 7fr 5fr; gap:64px; position:relative; z-index:2;">
+        <!-- Left: content -->
+        <div>
+          <div class="section-label-tag pink"></div>
+          <div style="font-size:9px; color:#C0A8A8; letter-spacing:0.12em; margin-bottom:12px;">SECTION LABEL · INTER 500 · DUSK BLOOM</div>
+          <div class="line dark" style="width:90%; height:36px; background:#4A5568; margin-bottom:6px;"></div>
+          <div class="line dark" style="width:70%; height:28px; background:#4A5568; opacity:0.7; margin-bottom:24px;"></div>
+          <div class="rule accent-rule" style="width:200px; margin-bottom:24px;"></div>
+          <div style="display:flex; flex-direction:column; gap:8px; max-width:680px;">
+            <div class="line dark" style="width:100%;"></div>
+            <div class="line dark" style="width:95%;"></div>
+            <div class="line dark" style="width:100%;"></div>
+            <div class="line dark" style="width:88%;"></div>
+          </div>
+          <div style="height:20px;"></div>
+          <div style="display:flex; flex-direction:column; gap:8px; max-width:680px;">
+            <div class="line dark" style="width:100%;"></div>
+            <div class="line dark" style="width:92%;"></div>
+            <div class="line dark" style="width:97%;"></div>
+          </div>
+          <div style="margin-top:32px;">
+            <div class="ghost-btn orange">READ MORE</div>
+          </div>
+        </div>
+        <!-- Right: image -->
+        <div>
+          <div class="img-placeholder ocean" style="height:320px;">
+            <div style="position:relative;z-index:1;font-size:10px;color:#AAA;text-align:center;padding:8px;background:rgba(0,0,0,0.4);">IMAGE · ocean horizon<br>WebP/AVIF · duotone · desaturated</div>
+          </div>
+          <div style="margin-top:8px; font-size:9px; color:#666; font-style:italic; letter-spacing:0.04em;">Caption · Cormorant Garamond italic · 14px · location or date</div>
+        </div>
+      </div>
+
+      <!-- annotations -->
+      <div class="ann" style="top:8px; left:8px; background:rgba(0,0,0,0.8); border-color:#555; color:#888;">Film grain + banding · dark section</div>
+      <div class="ann" style="top:8px; right:8px; background:rgba(0,0,0,0.8); border-color:#555; color:#888;">12-col grid · 24px gutter · max 1280px</div>
+      <div class="ann" style="bottom:16px; left:8px; background:#FFF7E6; border-color:#B07040; color:#B07040;">Body copy max-width: 680px · line-height 1.7</div>
+    </div>
+
+    <!-- Spacing ruler -->
+    <div style="position:absolute; left:0; top:0; bottom:0; width:12px; display:flex; flex-direction:column; justify-content:space-between; padding:0; pointer-events:none;">
+      <div style="height:80px; border-left:2px solid var(--wf-highlight); border-top:2px solid var(--wf-highlight); border-bottom:2px solid var(--wf-highlight); margin-left:4px; display:flex; align-items:center;">
+        <div class="ann" style="position:static; margin-left:8px; white-space:nowrap;">80px pad</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     FRAME 4 — CARDS GRID (dark surface)
+═══════════════════════════════════════════════════════ -->
+<section class="wf-section" id="frame-cards">
+<div class="wf-divider">Frame 4 — Cards Grid</div>
+<div class="wf-page">
+  <div class="wf-frame-label">
+    <span>CARDS-01</span>
+    <span class="note">Open Ocean card surface · no drop shadow · border thickness · left rule Horizon Glow · 3-col</span>
+  </div>
+  <div class="wf-frame" style="position:relative;">
+    <div class="section mid">
+
+      <!-- Section header -->
+      <div style="text-align:center; margin-bottom:48px;">
+        <div class="section-label-tag pink" style="margin:0 auto 12px;"></div>
+        <div style="font-size:9px; color:#C0A8A8; letter-spacing:0.12em; margin-bottom:12px;">SECTION LABEL · ALL CAPS · DUSK BLOOM</div>
+        <div class="line dark" style="width:300px; height:32px; background:#4A5568; margin:0 auto 8px;"></div>
+        <div class="line dark" style="width:220px; height:20px; background:#4A5568; opacity:0.6; margin:0 auto;"></div>
+      </div>
+
+      <!-- 3-col cards -->
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:24px; position:relative; z-index:2;">
+        <!-- Card 1 -->
+        <div class="card">
+          <div style="height:160px; background:#1C2232; border:1px dashed #444; display:flex; align-items:center; justify-content:center; font-size:10px; color:#555;">IMAGE BLOCK</div>
+          <div class="line dark" style="width:80%; height:14px; background:#4A5568;"></div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div class="line dark" style="width:100%;"></div>
+            <div class="line dark" style="width:90%;"></div>
+            <div class="line dark" style="width:95%;"></div>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center; margin-top:8px;">
+            <div style="height:10px; width:80px; background:#C0A8A8; border-radius:1px;"></div>
+            <div class="rule accent-rule" style="flex:1;"></div>
+          </div>
+        </div>
+
+        <!-- Card 2 — featured, taller -->
+        <div class="card" style="border:2px solid #B07040;">
+          <div style="background:#B07040; font-size:9px; color:white; padding:3px 8px; letter-spacing:0.06em; margin:-20px -20px 12px; text-align:center;">FEATURED</div>
+          <div style="height:180px; background:#1C2232; border:1px dashed #444; display:flex; align-items:center; justify-content:center; font-size:10px; color:#555;">IMAGE BLOCK</div>
+          <div class="line dark" style="width:85%; height:14px; background:#4A5568;"></div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div class="line dark" style="width:100%;"></div>
+            <div class="line dark" style="width:88%;"></div>
+            <div class="line dark" style="width:93%;"></div>
+            <div class="line dark" style="width:80%;"></div>
+          </div>
+          <div style="margin-top:8px;">
+            <div class="ghost-btn orange" style="width:100%; text-align:center;">VIEW PROJECT</div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+          <div style="height:160px; background:#1C2232; border:1px dashed #444; display:flex; align-items:center; justify-content:center; font-size:10px; color:#555;">IMAGE BLOCK</div>
+          <div class="line dark" style="width:75%; height:14px; background:#4A5568;"></div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div class="line dark" style="width:100%;"></div>
+            <div class="line dark" style="width:92%;"></div>
+            <div class="line dark" style="width:87%;"></div>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center; margin-top:8px;">
+            <div style="height:10px; width:80px; background:#C0A8A8; border-radius:1px;"></div>
+            <div class="rule accent-rule" style="flex:1;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ann" style="top:8px; left:8px; background:rgba(0,0,0,0.8); border-color:#555; color:#888;">Open Ocean (#2E4A72) card surface</div>
+      <div class="ann" style="top:8px; right:8px; background:rgba(0,0,0,0.8); border-color:#555; color:#888;">No drop shadow · border thickness only</div>
+      <div class="ann" style="bottom:8px; left:8px; background:#FFF7E6; border-color:#B07040; color:#B07040;">Left border: 3px Horizon Glow rule</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     FRAME 5 — PULL QUOTE
+═══════════════════════════════════════════════════════ -->
+<section class="wf-section" id="frame-quote">
+<div class="wf-divider">Frame 5 — Pull Quote Block</div>
+<div class="wf-page">
+  <div class="wf-frame-label">
+    <span>PULLQUOTE-01</span>
+    <span class="note">Cormorant Garamond 28–32px · Dusk Bloom opening mark only · text: Night Water / white</span>
+  </div>
+  <div class="wf-frame" style="position:relative;">
+    <div class="section dark" style="padding: 80px 160px;">
+      <div style="max-width:760px; margin:0 auto; position:relative; z-index:2;">
+        <div class="pull-quote-mark">"</div>
+        <div class="line dark" style="width:100%; height:24px; background:#5A6880; margin-bottom:8px;"></div>
+        <div class="line dark" style="width:90%; height:24px; background:#5A6880; margin-bottom:8px;"></div>
+        <div class="line dark" style="width:70%; height:24px; background:#5A6880; margin-bottom:24px;"></div>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <div class="rule accent-rule" style="width:40px;"></div>
+          <div class="line dark" style="width:160px; height:10px; background:#4A5568;"></div>
+        </div>
+      </div>
+      <div class="ann" style="top:8px; left:8px; background:rgba(0,0,0,0.8); border-color:#555; color:#888;">Cormorant Garamond · 28–32px · weight 300</div>
+      <div class="ann" style="top:40px; left:140px; background:#FDE8E8; border-color:#C0A8A8; color:#A07878;">" mark: Dusk Bloom (#E8A0A8) · opening mark only</div>
+      <div class="ann" style="bottom:24px; left:140px; background:#FFF7E6; border-color:#B07040; color:#B07040;">Attribution: Horizon Glow rule + Inter label</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     FRAME 6 — LIGHT CONTENT SECTION
+═══════════════════════════════════════════════════════ -->
+<section class="wf-section" id="frame-light">
+<div class="wf-divider">Frame 6 — Light Content Section (Sea Foam)</div>
+<div class="wf-page">
+  <div class="wf-frame-label">
+    <span>SECTION-LIGHT-01</span>
+    <span class="note">Sea Foam bg · no grain · visual rest · white cards w/ Night Water border + Horizon Glow left rule</span>
+  </div>
+  <div class="wf-frame" style="position:relative;">
+    <div class="section light">
+      <div style="text-align:center; margin-bottom:48px;">
+        <div class="section-label-tag" style="margin:0 auto 12px; background:#8899AA;"></div>
+        <div style="font-size:9px; color:#7A8896; letter-spacing:0.12em; margin-bottom:12px;">SECTION LABEL · STORM SLATE</div>
+        <div class="line" style="width:320px; height:32px; margin:0 auto 8px;"></div>
+        <div class="line sm" style="width:240px; margin:0 auto;"></div>
+      </div>
+
+      <!-- 2-col layout: text + cards -->
+      <div style="display:grid; grid-template-columns: 5fr 7fr; gap:64px; align-items:start;">
+        <div>
+          <div style="display:flex; flex-direction:column; gap:8px; max-width:680px;">
+            <div class="line" style="width:100%;"></div>
+            <div class="line" style="width:94%;"></div>
+            <div class="line" style="width:98%;"></div>
+            <div class="line" style="width:88%;"></div>
+          </div>
+          <div style="height:16px;"></div>
+          <div style="display:flex; flex-direction:column; gap:8px; max-width:680px;">
+            <div class="line" style="width:100%;"></div>
+            <div class="line" style="width:90%;"></div>
+            <div class="line" style="width:96%;"></div>
+          </div>
+          <div style="margin-top:24px;">
+            <div class="ghost-btn orange">LEARN MORE</div>
+          </div>
+        </div>
+
+        <!-- Light cards stack -->
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div class="card light-card">
+            <div class="line" style="width:60%; height:14px;"></div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div class="line sm" style="width:100%;"></div>
+              <div class="line sm" style="width:88%;"></div>
+            </div>
+          </div>
+          <div class="card light-card">
+            <div class="line" style="width:70%; height:14px;"></div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div class="line sm" style="width:100%;"></div>
+              <div class="line sm" style="width:92%;"></div>
+            </div>
+          </div>
+          <div class="card light-card">
+            <div class="line" style="width:55%; height:14px;"></div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div class="line sm" style="width:100%;"></div>
+              <div class="line sm" style="width:86%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ann" style="top:8px; left:8px;">Sea Foam (#F7F5F2) · no grain · no texture · clean section</div>
+      <div class="ann" style="top:8px; right:8px;">Light cards: white + 1px Night Water border + 3px Horizon Glow left</div>
+      <div class="ann" style="bottom:8px; left:8px;">CTA: primary fill (Horizon Glow) on light bg · or ghost variant</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     FRAME 7 — FOOTER
+═══════════════════════════════════════════════════════ -->
+<section class="wf-section" id="frame-footer">
+<div class="wf-divider">Frame 7 — Footer</div>
+<div class="wf-page">
+  <div class="wf-frame-label">
+    <span>FOOTER-01</span>
+    <span class="note">Night Water bg · 4-col layout · bird mark · Horizon Glow rule top separator</span>
+  </div>
+  <div class="wf-frame" style="position:relative;">
+    <div style="background:#1C2232; border-top: 2px solid #B07040; padding: 64px 80px 40px;">
+      <div style="display:grid; grid-template-columns: 3fr 2fr 2fr 2fr; gap:40px; margin-bottom:48px; position:relative; z-index:2;">
+        <!-- Brand col -->
+        <div class="footer-col">
+          <svg width="48" height="22" viewBox="0 0 48 22" fill="none" style="margin-bottom:12px; opacity:0.7;">
+            <path d="M24 11 L0 2 L4 11 L0 16 L9 13 L24 18 L39 13 L48 16 L44 11 L48 2 Z" fill="#C0C8D0"/>
+          </svg>
+          <div class="line dark" style="width:120px; height:14px; background:#4A5568;"></div>
+          <div style="display:flex; flex-direction:column; gap:6px; margin-top:12px;">
+            <div class="line dark" style="width:160px;"></div>
+            <div class="line dark" style="width:140px;"></div>
+            <div class="line dark" style="width:120px;"></div>
+          </div>
+        </div>
+        <!-- Nav col -->
+        <div class="footer-col">
+          <div class="line dark" style="width:80px; height:10px; background:#B07040; margin-bottom:16px;"></div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div class="line dark" style="width:80px;"></div>
+            <div class="line dark" style="width:90px;"></div>
+            <div class="line dark" style="width:70px;"></div>
+            <div class="line dark" style="width:85px;"></div>
+          </div>
+        </div>
+        <!-- Services col -->
+        <div class="footer-col">
+          <div class="line dark" style="width:80px; height:10px; background:#B07040; margin-bottom:16px;"></div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div class="line dark" style="width:100px;"></div>
+            <div class="line dark" style="width:80px;"></div>
+            <div class="line dark" style="width:90px;"></div>
+          </div>
+        </div>
+        <!-- Contact col -->
+        <div class="footer-col">
+          <div class="line dark" style="width:80px; height:10px; background:#B07040; margin-bottom:16px;"></div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div class="line dark" style="width:120px;"></div>
+            <div class="line dark" style="width:100px;"></div>
+          </div>
+          <div style="display:flex; gap:12px; margin-top:20px;">
+            <div class="box dark" style="width:32px; height:32px; border:1px solid #444;">ico</div>
+            <div class="box dark" style="width:32px; height:32px; border:1px solid #444;">ico</div>
+            <div class="box dark" style="width:32px; height:32px; border:1px solid #444;">ico</div>
+          </div>
+          <div style="font-size:8px; color:#555; margin-top:4px; letter-spacing:0.06em;">Phosphor Icons · thin weight</div>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid #333; padding-top:24px; display:flex; justify-content:space-between; align-items:center;">
+        <div class="line dark" style="width:200px; height:8px;"></div>
+        <div class="line dark" style="width:120px; height:8px;"></div>
+      </div>
+
+      <div class="ann" style="top:8px; left:8px; background:rgba(0,0,0,0.8); border-color:#555; color:#888;">Night Water bg · Horizon Glow 2px top border</div>
+      <div class="ann" style="top:8px; right:8px; background:rgba(0,0,0,0.8); border-color:#555; color:#888;">Bird mark: Salt white silhouette · small scale</div>
+      <div class="ann" style="bottom:8px; left:300px; background:rgba(0,0,0,0.8); border-color:#555; color:#888;">Bottom: Inter 400 · copyright + privacy</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     FRAME 8 — MOBILE BREAKPOINT
+═══════════════════════════════════════════════════════ -->
+<section class="wf-section" id="frame-mobile">
+<div class="wf-divider">Frame 8 — Mobile Breakpoint (375px)</div>
+<div class="wf-page" style="max-width:500px;">
+  <div class="wf-frame-label">
+    <span>MOBILE-01</span>
+    <span class="note">4-col · 16px gutter · 48–64px section padding · hamburger nav</span>
+  </div>
+  <div style="display:flex; gap:32px; align-items:flex-start; flex-wrap:wrap;">
+
+    <!-- Mobile nav -->
+    <div style="flex:1; min-width:200px;">
+      <div style="font-size:10px; color:var(--wf-mid); margin-bottom:8px; letter-spacing:0.06em;">MOBILE NAV</div>
+      <div class="wf-frame">
+        <div class="nav-bar" style="background:#1C2232; height:56px; padding:0 16px; justify-content:space-between;">
+          <div class="line dark" style="width:100px; height:12px; background:#4A5568;"></div>
+          <div style="display:flex; flex-direction:column; gap:5px;">
+            <div style="width:24px; height:2px; background:#888;"></div>
+            <div style="width:24px; height:2px; background:#888;"></div>
+            <div style="width:16px; height:2px; background:#888;"></div>
+          </div>
+        </div>
+        <div class="ann" style="position:static; display:block; font-size:9px; color:var(--wf-highlight); background:var(--wf-label-bg); border:1px solid var(--wf-highlight); padding:3px 8px; margin:4px;">hamburger · no visible links</div>
+      </div>
+    </div>
+
+    <!-- Mobile hero -->
+    <div style="flex:1; min-width:280px;">
+      <div style="font-size:10px; color:var(--wf-mid); margin-bottom:8px; letter-spacing:0.06em;">MOBILE HERO</div>
+      <div class="wf-frame" style="overflow:hidden;">
+        <div style="position:relative; height:480px; background: linear-gradient(180deg, #1A1D22 0%, #252C3A 40%, #3A3020 75%, #1A1A18 100%);">
+          <!-- Bird: centered on mobile -->
+          <svg style="position:absolute; top:120px; left:50%; transform:translateX(-50%); opacity:0.75;" width="160" height="72" viewBox="0 0 220 100" fill="none">
+            <path d="M110 50 L0 20 L20 50 L0 65 L40 58 L110 75 L180 58 L220 65 L200 50 L220 20 Z" fill="#E8E4DF"/>
+          </svg>
+          <!-- Content: stacked, full width -->
+          <div style="position:absolute; bottom:48px; left:16px; right:16px;">
+            <div class="line dark" style="height:28px; background:#4A5568; margin-bottom:6px;"></div>
+            <div class="line dark" style="height:20px; width:80%; background:#4A5568; opacity:0.7; margin-bottom:16px;"></div>
+            <div class="rule accent-rule" style="width:120px; margin-bottom:16px;"></div>
+            <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:20px;">
+              <div class="line dark" style="height:8px;"></div>
+              <div class="line dark" style="height:8px; width:90%;"></div>
+            </div>
+            <div class="ghost-btn" style="width:100%; text-align:center; border-color:#DDD; color:#DDD;">PRIMARY CTA</div>
+          </div>
+          <div class="ann" style="top:8px; left:4px; background:rgba(0,0,0,0.7); border-color:#555; color:#888; font-size:8px;">Bird: centered (not right-weighted)</div>
+          <div class="ann" style="top:24px; right:4px; background:rgba(0,0,0,0.7); border-color:#555; color:#888; font-size:8px;">Grain: reduced density on mobile</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile section -->
+    <div style="flex:1; min-width:280px;">
+      <div style="font-size:10px; color:var(--wf-mid); margin-bottom:8px; letter-spacing:0.06em;">MOBILE SECTION (dark)</div>
+      <div class="wf-frame">
+        <div style="background:#2C2A28; padding:48px 16px; position:relative;">
+          <div class="section-label-tag pink" style="margin-bottom:12px;"></div>
+          <div class="line dark" style="width:90%; height:24px; background:#4A5568; margin-bottom:6px;"></div>
+          <div class="line dark" style="width:70%; height:18px; background:#4A5568; opacity:0.7; margin-bottom:20px;"></div>
+          <div class="rule accent-rule" style="width:80px; margin-bottom:16px;"></div>
+          <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:24px;">
+            <div class="line dark"></div>
+            <div class="line dark" style="width:95%;"></div>
+            <div class="line dark"></div>
+            <div class="line dark" style="width:88%;"></div>
+          </div>
+          <!-- Image full-width on mobile -->
+          <div class="img-placeholder ocean" style="height:180px; margin-bottom:20px; width:100%;">
+            <div style="position:relative;z-index:1;font-size:9px;color:#AAA;background:rgba(0,0,0,0.4);padding:4px 8px;">Image · full bleed</div>
+          </div>
+          <div class="ghost-btn orange" style="width:100%; text-align:center;">READ MORE</div>
+
+          <div class="ann" style="top:8px; left:4px; background:rgba(0,0,0,0.8); border-color:#555; color:#888; font-size:8px;">48–64px pad mobile · 4-col · 16px gutter</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     FRAME 9 — BUTTON + TYPOGRAPHY REFERENCE
+═══════════════════════════════════════════════════════ -->
+<section class="wf-section" id="frame-ref">
+<div class="wf-divider">Frame 9 — Component + Typography Reference</div>
+<div class="wf-page">
+  <div class="wf-frame-label">
+    <span>REF-01</span>
+    <span class="note">Figma component reference — buttons · type scale · color swatches · spacing scale</span>
+  </div>
+  <div class="wf-frame" style="background:#FAFAF8;">
+    <div style="padding:40px; display:grid; grid-template-columns: 1fr 1fr 1fr; gap:40px;">
+
+      <!-- Buttons -->
+      <div>
+        <div style="font-size:10px; font-weight:700; letter-spacing:0.1em; color:var(--wf-highlight); margin-bottom:16px; text-transform:uppercase;">Button Variants</div>
+        <div style="display:flex; flex-direction:column; gap:12px; align-items:flex-start;">
+          <div>
+            <div style="background:#E8713A; color:white; padding:10px 28px; font-size:10px; letter-spacing:0.06em; font-family:var(--font-ui); text-transform:uppercase;">PRIMARY CTA</div>
+            <div style="font-size:8px; color:#888; margin-top:3px;">Fill: Horizon Glow · Text: Salt white · no radius</div>
+          </div>
+          <div>
+            <div class="ghost-btn orange">GHOST (LIGHT BG)</div>
+            <div style="font-size:8px; color:#888; margin-top:3px;">Border: Horizon Glow 1.5px · transparent bg</div>
+          </div>
+          <div style="background:#1C2232; padding:12px;">
+            <div class="ghost-btn" style="border-color:white; color:white;">GHOST (DARK BG)</div>
+            <div style="font-size:8px; color:#666; margin-top:3px;">Border: white 1.5px · dark context</div>
+          </div>
+          <div>
+            <span style="color:#E8713A; font-size:10px; font-family:var(--font-ui); text-decoration:underline;">TEXT LINK ↗</span>
+            <div style="font-size:8px; color:#888; margin-top:3px;">Color: Horizon Glow · underline on hover</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Type scale -->
+      <div>
+        <div style="font-size:10px; font-weight:700; letter-spacing:0.1em; color:var(--wf-highlight); margin-bottom:16px; text-transform:uppercase;">Type Scale</div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div>
+            <div class="line" style="height:48px; width:100%; background:#3A3835;"></div>
+            <div style="font-size:8px; color:#888; margin-top:2px;">H1 · Cormorant Garamond 300 · 52–72px · +0.02em</div>
+          </div>
+          <div>
+            <div class="line" style="height:32px; width:100%; background:#4A5568;"></div>
+            <div style="font-size:8px; color:#888; margin-top:2px;">H2 · Cormorant Garamond 300 · 36–44px</div>
+          </div>
+          <div>
+            <div class="line" style="height:20px; width:80%; background:#6E6B66;"></div>
+            <div style="font-size:8px; color:#888; margin-top:2px;">H3 · Cormorant Garamond 300 · 22–26px italic (dark bg)</div>
+          </div>
+          <div>
+            <div class="line" style="height:10px; width:100%; background:#9B9790;"></div>
+            <div style="font-size:8px; color:#888; margin-top:2px;">Body · Inter 400 · 16–18px · line-height 1.7 · max 680px</div>
+          </div>
+          <div>
+            <div class="line" style="height:9px; width:70%; background:#B8B5B0;"></div>
+            <div style="font-size:8px; color:#888; margin-top:2px;">Nav/Labels · Inter 500 · ALL CAPS · 0.08em spacing</div>
+          </div>
+          <div>
+            <div class="line" style="height:8px; width:55%; background:#C5C2BE;"></div>
+            <div style="font-size:8px; color:#888; margin-top:2px;">Caption · Inter 400 · 12px · Cormorant italic for img captions</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Color swatches + spacing -->
+      <div>
+        <div style="font-size:10px; font-weight:700; letter-spacing:0.1em; color:var(--wf-highlight); margin-bottom:16px; text-transform:uppercase;">Color System</div>
+        <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:24px;">
+          <div style="display:flex; gap:8px; align-items:center;">
+            <div style="width:32px;height:24px;background:#1A2B45;border:1px solid #AAA;flex-shrink:0;"></div>
+            <div style="font-size:8px; color:#555;">#1A2B45 · Night Water · dominant</div>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <div style="width:32px;height:24px;background:#2E4A72;border:1px solid #AAA;flex-shrink:0;"></div>
+            <div style="font-size:8px; color:#555;">#2E4A72 · Open Ocean · card surface</div>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <div style="width:32px;height:24px;background:#E8713A;border:1px solid #AAA;flex-shrink:0;"></div>
+            <div style="font-size:8px; color:#B07040;">#E8713A · Horizon Glow · accent CTA</div>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <div style="width:32px;height:24px;background:#E8A0A8;border:1px solid #AAA;flex-shrink:0;"></div>
+            <div style="font-size:8px; color:#A07880;">#E8A0A8 · Dusk Bloom · quote marks / tags</div>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <div style="width:32px;height:24px;background:#4A5568;border:1px solid #AAA;flex-shrink:0;"></div>
+            <div style="font-size:8px; color:#555;">#4A5568 · Storm Slate · mid neutral</div>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <div style="width:32px;height:24px;background:#F7F5F2;border:1px solid #CCC;flex-shrink:0;"></div>
+            <div style="font-size:8px; color:#555;">#F7F5F2 · Sea Foam · light bg</div>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <div style="width:32px;height:24px;background:#FFFFFF;border:1px solid #CCC;flex-shrink:0;"></div>
+            <div style="font-size:8px; color:#555;">#FFFFFF · Salt · text on dark only</div>
+          </div>
+        </div>
+        <!-- Spacing scale -->
+        <div style="font-size:10px; font-weight:700; letter-spacing:0.1em; color:var(--wf-highlight); margin-bottom:10px; text-transform:uppercase;">8px Spacing Scale</div>
+        <div style="display:flex; gap:4px; align-items:flex-end;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;"><div style="width:8px;height:8px;background:#9B9790;"></div><div style="font-size:7px;color:#888;">8</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;"><div style="width:8px;height:16px;background:#9B9790;"></div><div style="font-size:7px;color:#888;">16</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;"><div style="width:8px;height:24px;background:#9B9790;"></div><div style="font-size:7px;color:#888;">24</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;"><div style="width:8px;height:32px;background:#9B9790;"></div><div style="font-size:7px;color:#888;">32</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;"><div style="width:8px;height:48px;background:#8A8785;"></div><div style="font-size:7px;color:#888;">48</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;"><div style="width:8px;height:64px;background:#7A7775;"></div><div style="font-size:7px;color:#888;">64</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;"><div style="width:8px;height:80px;background:#6A6765;"></div><div style="font-size:7px;color:#888;">80</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;"><div style="width:8px;height:96px;background:#5A5755;"></div><div style="font-size:7px;color:#888;">96</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;"><div style="width:8px;height:120px;background:#4A4745;"></div><div style="font-size:7px;color:#888;">120</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ─── SCROLL NAV ─── -->
+<div class="page-scrollnav">
+  <div class="snav-item"><div class="snav-dot" onclick="scrollTo('frame-nav')"></div><div class="snav-label">NAV-01</div></div>
+  <div class="snav-item"><div class="snav-dot" onclick="scrollTo('frame-hero')"></div><div class="snav-label">HERO-01</div></div>
+  <div class="snav-item"><div class="snav-dot" onclick="scrollTo('frame-dark')"></div><div class="snav-label">DARK SECTION</div></div>
+  <div class="snav-item"><div class="snav-dot" onclick="scrollTo('frame-cards')"></div><div class="snav-label">CARDS</div></div>
+  <div class="snav-item"><div class="snav-dot" onclick="scrollTo('frame-quote')"></div><div class="snav-label">PULL QUOTE</div></div>
+  <div class="snav-item"><div class="snav-dot" onclick="scrollTo('frame-light')"></div><div class="snav-label">LIGHT SECTION</div></div>
+  <div class="snav-item"><div class="snav-dot" onclick="scrollTo('frame-footer')"></div><div class="snav-label">FOOTER</div></div>
+  <div class="snav-item"><div class="snav-dot" onclick="scrollTo('frame-mobile')"></div><div class="snav-label">MOBILE</div></div>
+  <div class="snav-item"><div class="snav-dot" onclick="scrollTo('frame-ref')"></div><div class="snav-label">REF</div></div>
+</div>
+
+<!-- ─── GRID TOGGLE ─── -->
+<button id="grid-toggle" onclick="toggleGrid()">⊞ TOGGLE GRID</button>
+
+<script>
+  function scrollTo(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  function toggleGrid() {
+    const overlays = document.querySelectorAll('.grid-overlay');
+    overlays.forEach(o => o.classList.toggle('visible'));
+  }
+
+  // Scroll nav active states
+  const sections = document.querySelectorAll('.wf-section');
+  const dots = document.querySelectorAll('.snav-dot');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        const navIds = ['frame-nav','frame-hero','frame-dark','frame-cards','frame-quote','frame-light','frame-footer','frame-mobile','frame-ref'];
+        const idx = navIds.indexOf(id);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      }
+    });
+  }, { threshold: 0.3 });
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
