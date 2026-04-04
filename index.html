@@ -215,10 +215,10 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: saturate(0.7) contrast(1.06) brightness(0.74);
-      transform: scale(1.03);
-      mix-blend-mode: screen;
-      opacity: 0.72;
+      filter: saturate(0.9) contrast(1.08) brightness(0.86);
+      transform: scale(1.015);
+      mix-blend-mode: normal;
+      opacity: 0.94;
     }
     .about-image::before {
       content: "";
@@ -226,14 +226,14 @@
       inset: 0;
       z-index: 1;
       background:
-        linear-gradient(165deg, rgba(9, 16, 31, 0.76) 6%, rgba(22, 39, 68, 0.22) 42%, rgba(4, 9, 19, 0.84) 94%),
+        radial-gradient(circle at 50% 46%, rgba(10, 20, 38, 0) 0%, rgba(10, 20, 38, 0.04) 38%, rgba(8, 16, 31, 0.36) 72%, rgba(4, 9, 19, 0.6) 100%),
         repeating-linear-gradient(
           180deg,
-          rgba(11, 23, 45, 0.54) 0px, rgba(11, 23, 45, 0.54) 14px,
-          rgba(37, 60, 93, 0.28) 14px, rgba(37, 60, 93, 0.28) 30px,
-          rgba(13, 26, 49, 0.5) 30px, rgba(13, 26, 49, 0.5) 46px
+          rgba(11, 23, 45, 0.18) 0px, rgba(11, 23, 45, 0.18) 14px,
+          rgba(37, 60, 93, 0.08) 14px, rgba(37, 60, 93, 0.08) 30px,
+          rgba(13, 26, 49, 0.16) 30px, rgba(13, 26, 49, 0.16) 46px
         );
-      mix-blend-mode: soft-light;
+      mix-blend-mode: multiply;
       pointer-events: none;
     }
     .about-image::after {
@@ -242,9 +242,9 @@
       inset: 0;
       z-index: 2;
       background:
-        radial-gradient(circle at 78% 30%, rgba(232,113,58,0.22), transparent 42%),
-        linear-gradient(90deg, rgba(16, 31, 55, 0.42) 0%, transparent 38%, rgba(10, 19, 36, 0.48) 100%);
-      mix-blend-mode: screen;
+        radial-gradient(circle at 78% 30%, rgba(232,113,58,0.09), transparent 46%),
+        radial-gradient(circle at 50% 48%, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.02) 46%, rgba(12, 22, 40, 0.22) 84%, rgba(8, 15, 29, 0.34) 100%);
+      mix-blend-mode: soft-light;
       pointer-events: none;
     }
     figcaption {
@@ -502,7 +502,7 @@
         </article>
         <figure>
           <div class="about-image">
-            <img src="IMG_4778.jpg" alt="Headshot" loading="lazy" />
+            <img src="IMG_4778.jpg" alt="Headshot" loading="eager" fetchpriority="high" decoding="async" />
           </div>
           <figcaption>Pacific horizon study · Sea Foam caption treatment</figcaption>
         </figure>
@@ -521,7 +521,7 @@
             <h3>Code-Aware RAG System</h3>
             <p>This project implements and improves upon the Retrieval-Augmented Generation (RAG) paradigm for WordPress documentation retrieval.</p>
             <a href="https://github.com/mojave-ghost/Code-Aware-RAG-System">View project →</a>
-          </article>s
+          </article>
           <article class="card">
             <h3>AI Job-Source Agent </h3>
             <p>An automated pipeline that discovers company career pages and extracts open job position URLs from LinkedIn job search results.</p>
