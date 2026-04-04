@@ -2,7 +2,7 @@
 
 A portfolio and professional presence site built on the **Nautical Dusk** design system — a maritime-inspired aesthetic centered on the concept of *stillness in motion*, using an albatross motif against layered atmospheric backgrounds.
 
-**Live site:** *Coming soon*  
+**Live site:** https://www.mariosalinas.com
 **Author:** Mario Salinas  
 **GitHub:** [mojave-ghost](https://github.com/mojave-ghost)
 
