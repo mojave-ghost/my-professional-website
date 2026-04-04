@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nautical Dusk — Professional Website</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&amp;family=Inter:wght@400;500&amp;display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --night-water: #1A2B45;
+      --open-ocean: #2E4A72;
+      --horizon-glow: #E8713A;
+      --dusk-bloom: #E8A0A8;
+      --storm-slate: #4A5568;
+      --sea-foam: #F7F5F2;
+      --salt: #FFFFFF;
+      --font-serif: "Cormorant Garamond", Georgia, serif;
+      --font-sans: "Inter", system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--night-water);
+      color: var(--salt);
+      line-height: 1.7;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      width: min(1280px, calc(100% - 48px));
+      margin: 0 auto;
+    }
+
+    .grain::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23g)' opacity='0.12'/%3E%3C/svg%3E");
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 2px solid rgba(232, 113, 58, 0.4);
+      background: rgba(17, 31, 50, 0.92);
+      backdrop-filter: blur(2px);
+    }
+    .nav-inner {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .brand {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+    }
+    .menu {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .menu a { opacity: 0.85; }
+    .menu a:hover { opacity: 1; color: var(--dusk-bloom); }
+    .ghost-btn {
+      border: 1.5px solid var(--salt);
+      padding: 10px 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 10px;
+      font-weight: 500;
+      transition: 0.2s ease;
+    }
+    .ghost-btn:hover {
+      border-color: var(--horizon-glow);
+      color: var(--horizon-glow);
+    }
+
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      background: repeating-linear-gradient(
+        180deg,
+        #101a2a 0px, #101a2a 95px,
+        #17243a 95px, #17243a 210px,
+        #20314f 210px, #20314f 350px,
+        #2a3e60 350px, #2a3e60 460px,
+        #3d3020 460px, #3d3020 520px,
+        #2b2118 520px, #2b2118 610px,
+        #181d2a 610px, #181d2a 100%
+      );
+    }
+    .hero .container {
+      min-height: calc(100vh - 72px);
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: 24px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+      padding: 80px 0;
+    }
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--dusk-bloom);
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(52px, 8vw, 72px);
+      line-height: 1.04;
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      max-width: 12ch;
+      margin-bottom: 20px;
+    }
+    .horizon-rule {
+      width: 180px;
+      height: 2px;
+      background: var(--horizon-glow);
+      margin-bottom: 20px;
+    }
+    .hero-copy {
+      max-width: 680px;
+      color: rgba(247, 245, 242, 0.88);
+      margin-bottom: 28px;
+    }
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .fill-btn {
+      background: var(--horizon-glow);
+      color: var(--salt);
+      border: 1.5px solid var(--horizon-glow);
+      padding: 10px 24px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 10px;
+      font-weight: 500;
+    }
+    .hero-bird {
+      justify-self: end;
+      width: min(360px, 100%);
+      opacity: 0.9;
+    }
+
+    section { padding: 80px 0; }
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: clamp(36px, 5vw, 44px);
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 14px;
+      letter-spacing: 0.02em;
+    }
+    .section-intro {
+      max-width: 680px;
+      opacity: 0.85;
+      margin-bottom: 40px;
+    }
+
+    .about {
+      position: relative;
+      background: var(--night-water);
+      overflow: hidden;
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: 64px;
+      align-items: start;
+      position: relative;
+      z-index: 1;
+    }
+    .about figure {
+      background: var(--open-ocean);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-left: 3px solid var(--horizon-glow);
+      padding: 20px;
+    }
+    .about-image {
+      height: 320px;
+      background: repeating-linear-gradient(
+        180deg,
+        #16233a 0px, #16233a 12px,
+        #1f304d 12px, #1f304d 28px,
+        #2a3d5f 28px, #2a3d5f 44px,
+        #212c42 44px, #212c42 62px
+      );
+      position: relative;
+    }
+    .about-image::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 75% 28%, rgba(232,113,58,0.15), transparent 45%);
+    }
+    figcaption {
+      margin-top: 12px;
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: rgba(247, 245, 242, 0.8);
+    }
+
+    .projects {
+      background: #233654;
+    }
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .card {
+      background: var(--open-ocean);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-left: 3px solid var(--horizon-glow);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      min-height: 320px;
+    }
+    .card h3 {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      font-weight: 300;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+    .card p {
+      color: rgba(247,245,242,0.82);
+      font-size: 15px;
+      margin-bottom: 18px;
+    }
+    .card a {
+      margin-top: auto;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 10px;
+      color: var(--dusk-bloom);
+      font-weight: 500;
+    }
+
+    .quote {
+      position: relative;
+      background: var(--night-water);
+      text-align: center;
+    }
+    .quote blockquote {
+      max-width: 760px;
+      margin: 0 auto;
+      font-family: var(--font-serif);
+      font-size: clamp(28px, 4vw, 32px);
+      line-height: 1.3;
+      font-weight: 300;
+    }
+    .quote-mark {
+      color: var(--dusk-bloom);
+      font-size: 72px;
+      line-height: 0.7;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .quote cite {
+      display: inline-flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 18px;
+      font-style: normal;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 11px;
+      color: rgba(247,245,242,0.8);
+    }
+    .quote cite::before {
+      content: "";
+      width: 40px;
+      height: 2px;
+      background: var(--horizon-glow);
+      display: inline-block;
+    }
+
+    .services {
+      background: var(--sea-foam);
+      color: var(--night-water);
+    }
+    .services .eyebrow { color: var(--storm-slate); }
+    .services-grid {
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      gap: 64px;
+      align-items: start;
+    }
+    .service-cards {
+      display: grid;
+      gap: 16px;
+    }
+    .service-card {
+      background: var(--salt);
+      border: 1px solid rgba(26,43,69,0.2);
+      border-left: 3px solid var(--horizon-glow);
+      padding: 18px;
+    }
+    .service-card h3 {
+      font-family: var(--font-serif);
+      font-weight: 300;
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+    .services p { color: rgba(26,43,69,0.85); }
+
+    .footer {
+      background: var(--night-water);
+      border-top: 2px solid var(--horizon-glow);
+      padding: 64px 0 32px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 3fr 2fr 2fr 2fr;
+      gap: 40px;
+      margin-bottom: 32px;
+    }
+    .footer h4 {
+      color: var(--horizon-glow);
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+    .footer ul { list-style: none; display: grid; gap: 8px; }
+    .footer ul a { color: rgba(247,245,242,0.82); }
+    .footer ul a:hover { color: var(--dusk-bloom); }
+    .bird-mini {
+      width: 50px;
+      margin-bottom: 12px;
+      opacity: 0.75;
+    }
+    .copyright {
+      border-top: 1px solid rgba(255,255,255,0.14);
+      padding-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: rgba(247,245,242,0.7);
+    }
+
+    @media (max-width: 575.98px) {
+      .container { width: min(1280px, calc(100% - 24px)); }
+      section { padding: 48px 0; }
+      .nav-inner { height: 64px; }
+      .brand { font-size: 22px; }
+      .menu a { display: none; }
+      .menu .ghost-btn { display: inline-block; padding: 8px 14px; }
+      .hero .container,
+      .about-grid,
+      .services-grid { grid-template-columns: 1fr; }
+      .hero .container { min-height: calc(100vh - 64px); padding: 48px 0; }
+      .hero-bird {
+        justify-self: center;
+        max-width: 220px;
+        margin-top: 8px;
+      }
+      h1 { font-size: clamp(38px, 12vw, 52px); }
+      .horizon-rule { width: 120px; }
+      .project-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+
+    @media (min-width: 576px) and (max-width: 767.98px) {
+      .container { width: min(1280px, calc(100% - 32px)); }
+      section { padding: 56px 0; }
+      .menu a { display: none; }
+      .menu .ghost-btn { display: inline-block; }
+      .hero .container,
+      .about-grid,
+      .services-grid { grid-template-columns: 1fr; }
+      .hero-bird {
+        justify-self: center;
+        max-width: 260px;
+        margin-top: 12px;
+      }
+      .project-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 28px; }
+    }
+
+    @media (min-width: 768px) {
+      .container { width: min(1280px, calc(100% - 48px)); }
+      section { padding: 80px 0; }
+      .menu a { display: inline; }
+      .hero .container,
+      .about-grid,
+      .services-grid { grid-template-columns: 7fr 5fr; }
+      .hero-bird {
+        justify-self: end;
+        max-width: 360px;
+        margin-top: 0;
+      }
+      .project-grid { grid-template-columns: repeat(3, 1fr); }
+      .footer-grid { grid-template-columns: 3fr 2fr 2fr 2fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="#top" class="brand">MARIO SALINAS</a>
+      <nav class="menu" aria-label="Primary">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#services">Services</a>
+        <a href="#contact">Contact</a>
+        <a href="#contact" class="ghost-btn">Get in touch</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero grain">
+      <div class="container">
+        <div>
+          <p class="eyebrow">Nautical Dusk Portfolio</p>
+          <h1>Designing calm, high‑impact digital experiences.</h1>
+          <div class="horizon-rule"></div>
+          <p class="hero-copy">
+            I build product experiences with cinematic clarity, balancing expressive visual direction with practical systems thinking. This site follows the Nautical Dusk language: dark atmospheric layers, editorial typography, and precise accent moments.
+          </p>
+          <div class="hero-cta">
+            <a class="fill-btn" href="#projects">View selected work</a>
+            <a class="ghost-btn" href="#about">Read story</a>
+          </div>
+        </div>
+        <svg class="hero-bird" viewBox="0 0 220 100" fill="none" aria-hidden="true">
+          <path d="M110 50 L0 20 L20 50 L0 65 L40 58 L110 75 L180 58 L220 65 L200 50 L220 20 Z" fill="#E8E4DF"/>
+        </svg>
+      </div>
+    </section>
+
+    <section class="about grain" id="about">
+      <div class="container about-grid">
+        <article>
+          <p class="eyebrow">About</p>
+          <h2 class="section-title">A designer-developer shaped by narrative and systems.</h2>
+          <div class="horizon-rule"></div>
+          <p class="section-intro">
+            My practice sits between visual identity and product implementation. I care about typography, accessibility, and resilient front-end architecture equally. Across every engagement, I turn abstract goals into clear interfaces, content hierarchies, and scalable component systems.
+          </p>
+          <a href="#contact" class="ghost-btn">Let’s collaborate</a>
+        </article>
+        <figure>
+          <div class="about-image"></div>
+          <figcaption>Pacific horizon study · Sea Foam caption treatment</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="projects" id="projects">
+      <div class="container">
+        <p class="eyebrow">Selected Work</p>
+        <h2 class="section-title">Projects</h2>
+        <p class="section-intro">
+          Recent projects across product strategy, interactive front-end systems, and applied AI workflows.
+        </p>
+        <div class="project-grid">
+          <article class="card">
+            <h3>Semantic Search Engine</h3>
+            <p>Built a retrieval-augmented interface for private knowledge bases with answer traceability and contextual scoring.</p>
+            <a href="#">View project →</a>
+          </article>
+          <article class="card">
+            <h3>Real-Time Data Dashboard</h3>
+            <p>Designed and shipped a live operations dashboard with websocket event streams and responsive chart interactions.</p>
+            <a href="#">View project →</a>
+          </article>
+          <article class="card">
+            <h3>Portfolio CMS Platform</h3>
+            <p>Created a content editing experience for non-technical teams to publish long-form case studies without developer support.</p>
+            <a href="#">View project →</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="quote grain">
+      <div class="container">
+        <blockquote>
+          <span class="quote-mark">“</span>
+          Great digital products feel like open water: clear horizon, strong direction, and enough room for people to move with confidence.
+        </blockquote>
+        <cite>Mario Salinas</cite>
+      </div>
+    </section>
+
+    <section class="services" id="services">
+      <div class="container services-grid">
+        <article>
+          <p class="eyebrow">Services</p>
+          <h2 class="section-title">What I help teams build</h2>
+          <p class="section-intro">
+            From early concepting to production implementation, I focus on outcomes that improve clarity, conversion, and maintainability.
+          </p>
+          <a href="#contact" class="ghost-btn" style="border-color: var(--horizon-glow); color: var(--horizon-glow);">See availability</a>
+        </article>
+        <div class="service-cards">
+          <article class="service-card">
+            <h3>Design Systems</h3>
+            <p>Token-driven foundations, scalable components, and practical documentation for shipping teams.</p>
+          </article>
+          <article class="service-card">
+            <h3>Front-End Development</h3>
+            <p>Performance-aware interfaces with accessible interactions and maintainable structure.</p>
+          </article>
+          <article class="service-card">
+            <h3>Product Storytelling</h3>
+            <p>Narrative page architecture and messaging hierarchy for portfolios, launches, and brand experiences.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" id="contact">
+    <div class="container">
+      <div class="footer-grid">
+        <section>
+          <svg class="bird-mini" viewBox="0 0 220 100" fill="none" aria-hidden="true">
+            <path d="M110 50 L0 20 L20 50 L0 65 L40 58 L110 75 L180 58 L220 65 L200 50 L220 20 Z" fill="#E8E4DF"/>
+          </svg>
+          <p>Independent designer and developer crafting digital work with editorial discipline and technical precision.</p>
+        </section>
+        <section>
+          <h4>Navigation</h4>
+          <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#services">Services</a></li>
+          </ul>
+        </section>
+        <section>
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="mailto:hello@example.com">hello@example.com</a></li>
+            <li><a href="#">LinkedIn</a></li>
+            <li><a href="#">GitHub</a></li>
+          </ul>
+        </section>
+        <section>
+          <h4>Availability</h4>
+          <ul>
+            <li>Q2 2026 — 1 project slot</li>
+            <li>Remote-first collaboration</li>
+            <li>US + LATAM time zones</li>
+          </ul>
+        </section>
+      </div>
+      <div class="copyright">
+        <span>© 2026 Mario Salinas</span>
+        <span>Nautical Dusk Design System · v1.0</span>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
