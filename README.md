@@ -2,10 +2,6 @@
 
 A portfolio and professional presence site built on the **Nautical Dusk** design system — a maritime-inspired aesthetic centered on the concept of *stillness in motion*, using an albatross motif against layered atmospheric backgrounds.
 
-**Live site:** https://www.mariosalinas.com <br/>
-**Author:** Mario Salinas  
-**GitHub:** [mojave-ghost](https://github.com/mojave-ghost)
-
 ---
 
 ## Overview
@@ -100,7 +96,3 @@ The `/` directory includes design process artifacts:
 
 - **`nauticalduskdesigndoc.pdf`** — The complete design system document covering color, typography, imagery rules, UI components, layout specs, content voice, and implementation notes
 - **`nautical-dusk-lowfidelity-wireframes.html`** — Nine annotated wireframe frames covering navigation, hero, dark/light content sections, cards, pull quote, footer, mobile breakpoint, and a component reference sheet
-
-## License
-
-© 2026 Mario Salinas. All rights reserved.
